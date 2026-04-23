@@ -1,16 +1,51 @@
-# React + Vite
+# RehabFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A bilingual (English / 中文) rehab companion for knee (meniscus) and ankle recovery, built around evidence-based protocols from Mayo Clinic, AAOS, HSS, Mass General, Kaiser Permanente, NIH/PMC, BMJ, and ACSM.
 
-Currently, two official plugins are available:
+## Intent
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+RehabFlow turns clinical rehab guidance into a daily, trackable practice. It is designed for someone recovering from a knee or ankle injury who wants a single place to:
 
-## React Compiler
+- **Follow a phased plan.** Exercises are tagged by phase (1 → 3), intensity, target muscle group, and whether they require gym equipment, so the session can adapt to where the user is in recovery.
+- **Understand the "why."** Each exercise carries cited guidance (e.g. AAOS, HSS, Kaiser PT program), bilingual step-by-step instructions, form tips, warning signs, and an embedded YouTube reference.
+- **See the body.** An interactive front/back muscle map explains which muscles each exercise targets and why they matter for knee/ankle stability.
+- **Track what matters.** Daily logging of mood, pain, and swelling, plus exercise completion, so trends are visible over weeks rather than lost to memory.
+- **Stay safe.** Every exercise has explicit `safeFor` tags (knee / ankle / upper body) and warn conditions, making it easy to train the upper body while a lower-body injury heals.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The goal is not to replace a physical therapist — it is to make the prescribed work easier to execute consistently between clinic visits.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **React 19** — UI, hooks-based state management
+- **Vite 8** — dev server, HMR, production build
+- **ESLint 9** — with `eslint-plugin-react-hooks` and `eslint-plugin-react-refresh`
+- **Vanilla JavaScript** (JSX, no TypeScript)
+- **Browser localStorage** — persistence for logs and progress (no backend)
+- **Inline SVG** — custom muscle map rendering
+- **YouTube embeds** — exercise video references with timestamped starts
+
+No backend, no database, no auth — the app runs entirely client-side and is deployable as static files.
+
+## Development
+
+```bash
+npm install
+npm run dev      # start Vite dev server with HMR
+npm run build    # production build → dist/
+npm run preview  # serve the production build locally
+npm run lint     # run ESLint
+```
+
+## Project Structure
+
+```
+rehabflow/
+├── src/
+│   ├── App.jsx        # Main app: exercise library, muscle map, tracker, logic
+│   ├── main.jsx       # React entry point
+│   └── assets/
+├── public/
+├── index.html
+├── vite.config.js
+└── eslint.config.js
+```
