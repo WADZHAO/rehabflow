@@ -528,24 +528,38 @@ function AIChatbot(){
 
   useEffect(() => { if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight; }, [msgs]);
 
+  const CHAT_LIMIT = 3;
+
   const send = async () => {
     if (!input.trim() || loading) return;
     const um = input.trim(); setInput("");
+    const cn = /[\u4e00-\u9fff]/.test(um);
+
+    const used = parseInt(localStorage.getItem("chat_count") || "0", 10);
+    if (used >= CHAT_LIMIT) {
+      setMsgs(p => [...p, { role: "user", text: um }, { role: "ai", text: cn ? `已达每用户 ${CHAT_LIMIT} 次提问上限。` : `You've reached the ${CHAT_LIMIT}-message limit.` }]);
+      return;
+    }
+
     setMsgs(p => [...p, { role: "user", text: um }]);
     setLoading(true);
-    const cn = /[\u4e00-\u9fff]/.test(um);
     try {
-      const r = await fetch("https://api.anthropic.com/v1/messages", {
+      const r = await fetch("/api/chat", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 1000,
-          system: "You are a PT assistant for meniscus tear and ankle effusion recovery. Evidence-based, concise (2-4 sentences). Detect language, respond in same language. Reference Mayo Clinic/AAOS/HSS when relevant. Always recommend consulting a doctor for serious concerns.",
           messages: msgs.slice(1).map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.text })).concat({ role: "user", content: um })
         })
       });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const d = await r.json();
-      setMsgs(p => [...p, { role: "ai", text: d.content?.map(b => b.text || "").join("") || "Please try again." }]);
-    } catch {
+      localStorage.setItem("chat_count", String(used + 1));
+      const remaining = CHAT_LIMIT - (used + 1);
+      const note = remaining > 0
+        ? (cn ? `\n\n（剩余 ${remaining} 次）` : `\n\n(${remaining} message${remaining === 1 ? "" : "s"} left)`)
+        : (cn ? `\n\n（已达上限）` : `\n\n(limit reached)`);
+      setMsgs(p => [...p, { role: "ai", text: (d.text || (cn ? "抱歉，请稍后再试。" : "Sorry, please try again.")) + note }]);
+    } catch (e) {
+      console.error("Chat error:", e);
       setMsgs(p => [...p, { role: "ai", text: cn ? "抱歉，请稍后再试。" : "Sorry, please try again." }]);
     }
     setLoading(false);
