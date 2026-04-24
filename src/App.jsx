@@ -619,8 +619,23 @@ export default function App(){
   const[libOpen,setLibOpen]=useState(false);
   const[fade,setFade]=useState(true);const[selM,setSelM]=useState(null);
   const[exReturn,setExReturn]=useState("plan");
+  const exScrollYRef=useRef(0);
 
-  const nav=useCallback((t,d)=>{setFade(false);setShowVid(false);setTimeout(()=>{setScr(t);if(d?.ex)setSelEx(d.ex);if(d?.from)setExReturn(d.from);setFade(true);},150);},[]);
+  const nav=useCallback((t,d)=>{
+    const currentY=window.scrollY;
+    setFade(false);setShowVid(false);
+    setTimeout(()=>{
+      setScr(t);
+      if(d?.ex)setSelEx(d.ex);
+      if(d?.from){setExReturn(d.from);exScrollYRef.current=currentY;}
+      setFade(true);
+      if(d?.restoreScroll){
+        requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,exScrollYRef.current)));
+      }else{
+        window.scrollTo(0,0);
+      }
+    },150);
+  },[]);
   const comp=(id)=>{setDone(p=>p.includes(id)?p:[...p,id]);const k=tod();setHist(p=>({...p,[k]:{checkin:ci,completed:[...(p[k]?.completed||[]),id],date:k}}));};
   const submit=()=>{setWo(genWorkout(ci,hist,profile));setDone([]);nav("plan");};
 
@@ -809,7 +824,7 @@ export default function App(){
 
       {/* EXERCISE */}
       {scr==="exercise"&&selEx&&<div style={{padding:"0 20px",maxWidth:520,margin:"0 auto"}}>
-        <button onClick={()=>nav(exReturn)} style={{background:"none",border:"none",color:C.accent2,padding:"18px 0",cursor:"pointer",fontSize:15,fontFamily:SF,fontWeight:500}}>‹ {exReturn==="summary"?"Summary":"Today"}</button>
+        <button onClick={()=>nav(exReturn,{restoreScroll:true})} style={{background:"none",border:"none",color:C.accent2,padding:"18px 0",cursor:"pointer",fontSize:15,fontFamily:SF,fontWeight:500}}>‹ {exReturn==="summary"?"Summary":"Today"}</button>
         <div style={{animation:"fadeUp 0.3s ease"}}>
           <div style={{display:"flex",gap:6,marginBottom:8}}>{selEx.safeFor.map(t=><span key={t} style={{fontSize:12,padding:"4px 10px",borderRadius:8,background:t==="knee"?"#FFF0F3":t==="ankle"?"#FFF3E0":"#F0F4FF",color:t==="knee"?C.accent:t==="ankle"?"#E65100":C.accent2,fontWeight:600}}>{t==="knee"?"🦵 Knee":t==="ankle"?"🦶 Ankle":"💪 Upper"}</span>)}</div>
           <h1 style={{fontSize:28,fontWeight:700,letterSpacing:-0.3,marginBottom:1}}>{selEx.name}</h1>
