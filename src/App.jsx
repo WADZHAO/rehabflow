@@ -664,7 +664,7 @@ export default function App(){
       ))}
     </div>
 
-    <div style={{opacity:fade?1:0,transform:fade?"translateY(0)":"translateY(6px)",transition:"all 0.15s",paddingBottom:90}}>
+    <div style={{opacity:fade?1:0,transform:fade?"translateY(0)":"translateY(6px)",transition:"all 0.15s",paddingBottom:"calc(90px + env(safe-area-inset-bottom, 0px))"}}>
 
       {/* CHECK-IN */}
       {scr==="checkin"&&<div style={{padding:"0 20px",maxWidth:520,margin:"0 auto"}}>
