@@ -618,8 +618,9 @@ export default function App(){
   const[rd,setRd]=useState([1,3,5]);const[rt,setRt]=useState("09:00");const[rs,setRs]=useState(false);
   const[libOpen,setLibOpen]=useState(false);
   const[fade,setFade]=useState(true);const[selM,setSelM]=useState(null);
+  const[exReturn,setExReturn]=useState("plan");
 
-  const nav=useCallback((t,d)=>{setFade(false);setShowVid(false);setTimeout(()=>{setScr(t);if(d?.ex)setSelEx(d.ex);setFade(true);},150);},[]);
+  const nav=useCallback((t,d)=>{setFade(false);setShowVid(false);setTimeout(()=>{setScr(t);if(d?.ex)setSelEx(d.ex);if(d?.from)setExReturn(d.from);setFade(true);},150);},[]);
   const comp=(id)=>{setDone(p=>p.includes(id)?p:[...p,id]);const k=tod();setHist(p=>({...p,[k]:{checkin:ci,completed:[...(p[k]?.completed||[]),id],date:k}}));};
   const submit=()=>{setWo(genWorkout(ci,hist,profile));setDone([]);nav("plan");};
 
@@ -796,7 +797,7 @@ export default function App(){
             </div>
           </>}
         </div>
-        {plan.map((ex,i)=>{const d=done.includes(ex.id);return(<div key={ex.id} onClick={()=>{setSelEx(ex);nav("exercise",{ex})}} style={{background:"#fff",border:`1px solid ${d?"#D4EDDA":C.cardBorder}`,borderRadius:14,padding:16,marginBottom:8,cursor:"pointer",animation:`fadeUp 0.3s ease ${i*0.03}s both`}}>
+        {plan.map((ex,i)=>{const d=done.includes(ex.id);return(<div key={ex.id} onClick={()=>{setSelEx(ex);nav("exercise",{ex,from:"plan"})}} style={{background:"#fff",border:`1px solid ${d?"#D4EDDA":C.cardBorder}`,borderRadius:14,padding:16,marginBottom:8,cursor:"pointer",animation:`fadeUp 0.3s ease ${i*0.03}s both`}}>
           <div style={{display:"flex",alignItems:"center",gap:12}}>
             <div style={{width:38,height:38,borderRadius:19,background:d?C.green:C.card,display:"flex",alignItems:"center",justifyContent:"center",fontSize:d?16:14,color:d?"#fff":C.sub,fontWeight:700,border:d?"none":`1px solid ${C.border}`}}>{d?"✓":i+1}</div>
             <div style={{flex:1}}><div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}><span style={{fontSize:16,fontWeight:600}}>{ex.name}</span><span style={{fontSize:13,color:C.sub}}>{ex.zh}</span>{ex.gym&&<span style={{fontSize:10,padding:"1px 6px",borderRadius:4,background:"#F0F4FF",color:C.accent2,fontWeight:700}}>🏢 GYM</span>}</div><div style={{fontSize:13,color:C.sub,marginTop:1}}>{ex.target} · {ex.sets}×{ex.reps}</div><div style={{fontSize:11,color:"#B0B0B5",marginTop:2}}>{ex.src}</div></div>
@@ -808,7 +809,7 @@ export default function App(){
 
       {/* EXERCISE */}
       {scr==="exercise"&&selEx&&<div style={{padding:"0 20px",maxWidth:520,margin:"0 auto"}}>
-        <button onClick={()=>nav("plan")} style={{background:"none",border:"none",color:C.accent2,padding:"18px 0",cursor:"pointer",fontSize:15,fontFamily:SF,fontWeight:500}}>‹ Today</button>
+        <button onClick={()=>nav(exReturn)} style={{background:"none",border:"none",color:C.accent2,padding:"18px 0",cursor:"pointer",fontSize:15,fontFamily:SF,fontWeight:500}}>‹ {exReturn==="summary"?"Summary":"Today"}</button>
         <div style={{animation:"fadeUp 0.3s ease"}}>
           <div style={{display:"flex",gap:6,marginBottom:8}}>{selEx.safeFor.map(t=><span key={t} style={{fontSize:12,padding:"4px 10px",borderRadius:8,background:t==="knee"?"#FFF0F3":t==="ankle"?"#FFF3E0":"#F0F4FF",color:t==="knee"?C.accent:t==="ankle"?"#E65100":C.accent2,fontWeight:600}}>{t==="knee"?"🦵 Knee":t==="ankle"?"🦶 Ankle":"💪 Upper"}</span>)}</div>
           <h1 style={{fontSize:28,fontWeight:700,letterSpacing:-0.3,marginBottom:1}}>{selEx.name}</h1>
@@ -936,7 +937,7 @@ export default function App(){
                 <div key={phase} style={{marginBottom:phase<3?16:0}}>
                   <div style={{fontSize:12,fontWeight:700,color:phase===1?C.green:phase===2?C.accent2:C.accent,marginBottom:8,letterSpacing:0.3}}>{phases[phase]}</div>
                   {phaseExs.map((ex,i) => (
-                    <div key={ex.id} onClick={()=>{setSelEx(ex);nav("exercise",{ex});}} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 0",borderBottom:i<phaseExs.length-1?`1px solid ${C.card}`:"none",cursor:"pointer"}}>
+                    <div key={ex.id} onClick={()=>{setSelEx(ex);nav("exercise",{ex,from:"summary"});}} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 0",borderBottom:i<phaseExs.length-1?`1px solid ${C.card}`:"none",cursor:"pointer"}}>
                       <div style={{width:30,height:30,borderRadius:10,background:phase===1?"#E8FAF0":phase===2?"#F0F4FF":"#FFF0F3",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:phase===1?C.green:phase===2?C.accent2:C.accent,flexShrink:0}}>{i+1}</div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontSize:14,fontWeight:600,color:C.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{ex.name}</div>
@@ -978,7 +979,7 @@ export default function App(){
                 <div key={gi} style={{marginBottom:gi<groups.length-1?14:0}}>
                   <div style={{fontSize:12,fontWeight:700,color:C.accent2,marginBottom:6}}>{g.label}</div>
                   {exs.map((ex,i) => (
-                    <div key={ex.id} onClick={()=>{setSelEx(ex);nav("exercise",{ex});}} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 0",borderBottom:i<exs.length-1?`1px solid ${C.card}`:"none",cursor:"pointer"}}>
+                    <div key={ex.id} onClick={()=>{setSelEx(ex);nav("exercise",{ex,from:"summary"});}} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 0",borderBottom:i<exs.length-1?`1px solid ${C.card}`:"none",cursor:"pointer"}}>
                       <div style={{fontSize:12,fontWeight:600,color:ex.src?.includes("Kaiser")?C.accent:C.sub,flexShrink:0,width:14,textAlign:"center"}}>{ex.src?.includes("Kaiser")?"K":"•"}</div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontSize:13,fontWeight:500,color:C.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{ex.name} <span style={{color:C.sub,fontSize:12}}>{ex.zh}</span></div>
