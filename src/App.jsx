@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { ensureSession, loadAll, saveProfile as supaSaveProfile, saveDailyLog, saveSettings as supaSaveSettings } from "./supabase";
 
 const SOURCES = [
   { org:"Mayo Clinic", desc:"Torn Meniscus — Diagnosis & Treatment", url:"https://www.mayoclinic.org/diseases-conditions/torn-meniscus/diagnosis-treatment/drc-20354823" },
@@ -620,6 +621,47 @@ export default function App(){
   const[fade,setFade]=useState(true);const[selM,setSelM]=useState(null);
   const[exReturn,setExReturn]=useState("plan");
   const exScrollYRef=useRef(0);
+  const[userId,setUserId]=useState(null);
+
+  // Bootstrap: anon auth + hydrate from Supabase
+  useEffect(()=>{
+    let cancelled=false;
+    (async()=>{
+      const user=await ensureSession();
+      if(cancelled||!user)return;
+      const data=await loadAll(user.id);
+      if(cancelled||!data)return;
+      setUserId(user.id);
+      if(data.profile){
+        const p={age:data.profile.age||"",height:data.profile.height||"",weight:data.profile.weight||"",level:data.profile.level||"beginner",gender:data.profile.gender||"female",hasGym:!!data.profile.has_gym,saved:true};
+        setProfile(p);
+        setScr("checkin");
+      }
+      if(data.settings){
+        const wgd=data.settings.weekly_goal_days??4;
+        setWg({d:wgd});setGi(wgd);
+        setRd(data.settings.reminder_days||[1,3,5]);
+        setRt(data.settings.reminder_time||"09:00");
+        setRs(!!data.settings.reminder_on);
+      }
+      const histMap={};let todayLog=null;const today=tod();
+      for(const r of (data.logs||[])){
+        const k=r.date;
+        histMap[k]={checkin:{pain:r.pain||0,swelling:r.swelling||0,mood:r.mood??3,areas:r.areas||[]},completed:r.completed||[],date:k};
+        if(k===today)todayLog=histMap[k];
+      }
+      setHist(histMap);
+      if(todayLog){
+        setCi(todayLog.checkin);
+        setDone(todayLog.completed||[]);
+        if(data.profile){
+          const pforGen={level:data.profile.level||"beginner",hasGym:!!data.profile.has_gym,age:data.profile.age||"30",weight:data.profile.weight||"60"};
+          setWo(genWorkout(todayLog.checkin,histMap,pforGen));
+        }
+      }
+    })();
+    return()=>{cancelled=true;};
+  },[]);
 
   const nav=useCallback((t,d)=>{
     const currentY=window.scrollY;
@@ -636,7 +678,7 @@ export default function App(){
       }
     },150);
   },[]);
-  const comp=(id)=>{setDone(p=>p.includes(id)?p:[...p,id]);const k=tod();setHist(p=>({...p,[k]:{checkin:ci,completed:[...(p[k]?.completed||[]),id],date:k}}));};
+  const comp=(id)=>{setDone(p=>p.includes(id)?p:[...p,id]);const k=tod();setHist(p=>{const nextLog={checkin:ci,completed:[...(p[k]?.completed||[]),id],date:k};if(userId)saveDailyLog(userId,k,nextLog);return{...p,[k]:nextLog};});};
   const submit=()=>{setWo(genWorkout(ci,hist,profile));setDone([]);nav("plan");};
 
   const stats=useMemo(()=>{const d=parseInt(sr),e=[];for(let i=0;i<d;i++){const dt=new Date();dt.setDate(dt.getDate()-i);const k=dk(dt);if(hist[k])e.push(hist[k]);}return{tw:e.length,te:e.reduce((s,x)=>s+(x.completed?.length||0),0),ap:e.length?(e.reduce((s,x)=>s+(x.checkin?.pain||0),0)/e.length).toFixed(1):"—",am:e.length?(e.reduce((s,x)=>s+(x.checkin?.mood||0),0)/e.length).toFixed(1):"—",pt:e.length>=2?(e[0]?.checkin?.pain||0)-(e[e.length-1]?.checkin?.pain||0):0,e};},[hist,sr]);
@@ -902,12 +944,12 @@ export default function App(){
         <div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:14,border:`1px solid ${C.cardBorder}`,animation:"fadeUp 0.4s ease 0.1s both"}}>
           <div style={{fontSize:13,fontWeight:700,color:C.sub,marginBottom:12}}>WEEKLY TARGET</div>
           <div style={{display:"flex",alignItems:"center",gap:14}}><input type="range" min={2} max={7} value={gi} onChange={e=>setGi(+e.target.value)} style={{flex:1}}/><div style={{width:40,height:40,borderRadius:12,background:"#FFF0F3",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:MONO,fontSize:20,fontWeight:700,color:C.accent}}>{gi}</div></div>
-          <button onClick={()=>setWg({d:gi})} style={{background:C.accent,border:"none",color:"#fff",width:"100%",padding:13,borderRadius:12,fontSize:15,fontWeight:600,cursor:"pointer",marginTop:14,fontFamily:SF}}>Update Goal</button>
+          <button onClick={()=>{setWg({d:gi});if(userId)supaSaveSettings(userId,{weekly_goal_days:gi,reminder_days:rd,reminder_time:rt,reminder_on:rs});}} style={{background:C.accent,border:"none",color:"#fff",width:"100%",padding:13,borderRadius:12,fontSize:15,fontWeight:600,cursor:"pointer",marginTop:14,fontFamily:SF}}>Update Goal</button>
         </div>
         <div style={{background:"#fff",borderRadius:16,padding:20,border:`1px solid ${C.cardBorder}`,animation:"fadeUp 0.4s ease 0.15s both"}}>
           <div style={{fontSize:13,fontWeight:700,color:C.sub,marginBottom:12}}>🔔 REMINDERS</div>
           <div style={{display:"flex",gap:4,marginBottom:12}}>{DAYSFULL.map((d,i)=><button key={d} onClick={()=>{setRd(ds=>ds.includes(i)?ds.filter(x=>x!==i):[...ds,i]);setRs(false);}} style={{flex:1,padding:"8px 0",borderRadius:8,border:"none",background:rd.includes(i)?C.accent:C.card,color:rd.includes(i)?"#fff":C.sub,fontSize:10,fontWeight:600,cursor:"pointer"}}>{DAYS[i]}</button>)}</div>
-          <div style={{display:"flex",gap:8}}><input type="time" value={rt} onChange={e=>{setRt(e.target.value);setRs(false);}} style={{flex:1,background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 12px",color:C.text,fontSize:15,fontFamily:MONO}}/><button onClick={()=>setRs(true)} style={{background:rs?C.green:C.accent2,border:"none",color:"#fff",padding:"10px 20px",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer"}}>{rs?"✓":"Save"}</button></div>
+          <div style={{display:"flex",gap:8}}><input type="time" value={rt} onChange={e=>{setRt(e.target.value);setRs(false);}} style={{flex:1,background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 12px",color:C.text,fontSize:15,fontFamily:MONO}}/><button onClick={()=>{setRs(true);if(userId)supaSaveSettings(userId,{weekly_goal_days:wg.d,reminder_days:rd,reminder_time:rt,reminder_on:true});}} style={{background:rs?C.green:C.accent2,border:"none",color:"#fff",padding:"10px 20px",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer"}}>{rs?"✓":"Save"}</button></div>
         </div>
       </div>}
 
@@ -1114,7 +1156,7 @@ export default function App(){
           );
         })()}
 
-        <button onClick={()=>{setProfile(p=>({...p,saved:true}));nav("checkin");}}
+        <button onClick={()=>{const np={...profile,saved:true};setProfile(np);if(userId)supaSaveProfile(userId,np);nav("checkin");}}
           disabled={!profile.age||!profile.height||!profile.weight}
           style={{background:C.accent,border:"none",color:"#fff",width:"100%",padding:16,borderRadius:14,fontSize:17,fontWeight:600,cursor:"pointer",fontFamily:SF,opacity:(!profile.age||!profile.height||!profile.weight)?0.4:1,animation:"fadeUp 0.4s ease 0.3s both"}}>
           {profile.saved?"Save Changes":"Start My Journey →"}
