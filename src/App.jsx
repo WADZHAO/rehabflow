@@ -15,18 +15,18 @@ const SOURCES = [
 
 const MUSCLES_DATA = {
   front: [
-    { id:"deltoids-f",en:"Deltoids",zh:"三角肌",color:"#E8834A",paths:["M 32 22 Q 28 20 25 23 Q 24 28 27 30 L 33 27 Z","M 68 22 Q 72 20 75 23 Q 76 28 73 30 L 67 27 Z"],desc_en:"Shoulder muscles for upper body balance.",desc_zh:"肩部肌肉，维持上身平衡。",exercises:["Shoulder Press","Lateral Raises"],tips_en:"Can train upper body safely during knee rehab.",tips_zh:"膝关节康复期间可安全训练上肢。"},
+    { id:"deltoids-f",en:"Deltoids",zh:"三角肌",color:"#E8834A",paths:["M 32 22 Q 28 20 25 23 Q 24 28 27 30 L 33 27 Z","M 68 22 Q 72 20 75 23 Q 76 28 73 30 L 67 27 Z"],desc_en:"Shoulder muscles for upper body balance.",desc_zh:"肩部肌肉，维持上身平衡。",exercises:["Shoulder Press","Lateral Raises"],tips_en:"Can train upper body safely during knee personal training.",tips_zh:"膝关节康复期间可安全训练上肢。"},
     { id:"pecs",en:"Pectorals",zh:"胸肌",color:"#D46A5E",paths:["M 38 25 Q 42 23 50 24 Q 50 28 48 31 Q 44 32 38 30 Z","M 62 25 Q 58 23 50 24 Q 50 28 52 31 Q 56 32 62 30 Z"],desc_en:"Chest muscles. Safe during lower body recovery.",desc_zh:"胸部肌肉。下肢恢复期可安全训练。",exercises:["Modified Push-ups","Chest Press"],tips_en:"Use seated/lying positions to avoid knee stress.",tips_zh:"使用坐姿/仰卧以避免膝关节压力。"},
-    { id:"biceps",en:"Biceps",zh:"肱二头肌",color:"#C97B4B",paths:["M 25 30 Q 23 32 22 38 Q 23 40 25 39 L 27 32 Z","M 75 30 Q 77 32 78 38 Q 77 40 75 39 L 73 32 Z"],desc_en:"Upper arm muscles.",desc_zh:"上臂肌肉。",exercises:["Bicep Curls","Hammer Curls"],tips_en:"Great for maintaining morale during knee rehab.",tips_zh:"膝关节康复期间保持积极性。"},
+    { id:"biceps",en:"Biceps",zh:"肱二头肌",color:"#C97B4B",paths:["M 25 30 Q 23 32 22 38 Q 23 40 25 39 L 27 32 Z","M 75 30 Q 77 32 78 38 Q 77 40 75 39 L 73 32 Z"],desc_en:"Upper arm muscles.",desc_zh:"上臂肌肉。",exercises:["Bicep Curls","Hammer Curls"],tips_en:"Great for maintaining morale during knee personal training.",tips_zh:"膝关节康复期间保持积极性。"},
     { id:"abs",en:"Abdominals",zh:"腹肌",color:"#CF5C5C",paths:["M 43 31 Q 42 34 42 42 Q 44 46 50 47 Q 56 46 58 42 Q 58 34 57 31 Q 54 29 50 29 Q 46 29 43 31 Z"],desc_en:"Core stabilizers. Essential foundation for injury prevention.",desc_zh:"核心稳定肌。伤害预防的基础。",exercises:["Dead Bugs","Bird Dogs","Modified Planks"],tips_en:"Strong core compensates for knee/ankle weakness. Per HSS protocol.",tips_zh:"按HSS方案，强核心弥补膝踝弱点。"},
     { id:"obliques",en:"Obliques",zh:"腹斜肌",color:"#B5674D",paths:["M 38 30 L 42 31 Q 41 38 41 44 L 38 42 Q 36 36 38 30 Z","M 62 30 L 58 31 Q 59 38 59 44 L 62 42 Q 64 36 62 30 Z"],desc_en:"Side core for rotational stability.",desc_zh:"侧核心，旋转稳定性。",exercises:["Side Planks (modified)"],tips_en:"Rotate from core, not knee.",tips_zh:"从核心旋转，而非膝关节。"},
-    { id:"quads",en:"Quadriceps",zh:"股四头肌",color:"#E05D5D",paths:["M 39 54 Q 37 60 36 68 Q 36 72 38 76 L 42 76 Q 46 72 47 68 Q 48 60 47 54 Z","M 61 54 Q 63 60 64 68 Q 64 72 62 76 L 58 76 Q 54 72 53 68 Q 52 60 53 54 Z"],desc_en:"CRITICAL for knee stability. Primary focus in meniscus rehab per AAOS guidelines.",desc_zh:"对膝关节稳定性至关重要。按AAOS指南，半月板康复的主要重点。",exercises:["Quad Sets","Straight Leg Raises","Wall Mini Squats"],tips_en:"Activate without deep bending. Quad sets are safest per HSS.",tips_zh:"无需深蹲即可激活。按HSS方案，股四头肌收缩最安全。"},
+    { id:"quads",en:"Quadriceps",zh:"股四头肌",color:"#E05D5D",paths:["M 39 54 Q 37 60 36 68 Q 36 72 38 76 L 42 76 Q 46 72 47 68 Q 48 60 47 54 Z","M 61 54 Q 63 60 64 68 Q 64 72 62 76 L 58 76 Q 54 72 53 68 Q 52 60 53 54 Z"],desc_en:"CRITICAL for knee stability. Primary focus in meniscus personal training per AAOS guidelines.",desc_zh:"对膝关节稳定性至关重要。按AAOS指南，半月板康复的主要重点。",exercises:["Quad Sets","Straight Leg Raises","Wall Mini Squats"],tips_en:"Activate without deep bending. Quad sets are safest per HSS.",tips_zh:"无需深蹲即可激活。按HSS方案，股四头肌收缩最安全。"},
     { id:"adductors",en:"Adductors",zh:"内收肌",color:"#A85454",paths:["M 47 54 Q 48 62 48 70 L 50 72 L 52 70 Q 52 62 53 54 Z"],desc_en:"Inner thigh. Stabilizes knee during movement.",desc_zh:"大腿内侧。运动中稳定膝关节。",exercises:["Ball Squeeze","Side-Lying Adduction"],tips_en:"Ball squeezes between knees are safe early exercises.",tips_zh:"膝间夹球是安全的早期练习。"},
-    { id:"tibialis",en:"Tibialis Anterior",zh:"胫骨前肌",color:"#D48A4C",paths:["M 39 80 Q 38 86 38 92 Q 38 95 39 97 L 42 97 Q 43 94 43 90 Q 43 84 42 78 Z","M 61 80 Q 62 86 62 92 Q 62 95 61 97 L 58 97 Q 57 94 57 90 Q 57 84 58 78 Z"],desc_en:"Shin muscle. Key for ankle effusion rehab per NIH.",desc_zh:"胫前肌。按NIH，脚踝积液康复关键。",exercises:["Ankle Pumps","Band Dorsiflexion"],tips_en:"Ankle pumps reduce effusion gently.",tips_zh:"踝泵温和减少积液。"},
+    { id:"tibialis",en:"Tibialis Anterior",zh:"胫骨前肌",color:"#D48A4C",paths:["M 39 80 Q 38 86 38 92 Q 38 95 39 97 L 42 97 Q 43 94 43 90 Q 43 84 42 78 Z","M 61 80 Q 62 86 62 92 Q 62 95 61 97 L 58 97 Q 57 94 57 90 Q 57 84 58 78 Z"],desc_en:"Shin muscle. Key for ankle effusion personal training per NIH.",desc_zh:"胫前肌。按NIH，脚踝积液康复关键。",exercises:["Ankle Pumps","Band Dorsiflexion"],tips_en:"Ankle pumps reduce effusion gently.",tips_zh:"踝泵温和减少积液。"},
   ],
   back: [
-    { id:"traps",en:"Trapezius",zh:"斜方肌",color:"#C0785A",paths:["M 40 18 Q 44 16 50 15 Q 56 16 60 18 L 58 24 Q 54 22 50 21 Q 46 22 42 24 Z"],desc_en:"Upper back connecting neck and shoulders.",desc_zh:"上背部，连接颈肩。",exercises:["Shrugs","Face Pulls"],tips_en:"Trainable during lower body rehab.",tips_zh:"下肢康复期可训练。"},
-    { id:"lats",en:"Latissimus Dorsi",zh:"背阔肌",color:"#B8654E",paths:["M 36 28 Q 38 32 40 38 Q 42 42 44 44 L 50 42 L 56 44 Q 58 42 60 38 Q 62 32 64 28 L 58 24 Q 54 22 50 21 Q 46 22 42 24 Z"],desc_en:"Large back muscles for posture.",desc_zh:"大背肌，维持姿势。",exercises:["Seated Rows","Lat Pulldown"],tips_en:"Seated rows maintain upper body during rehab.",tips_zh:"坐姿划船保持上肢力量。"},
+    { id:"traps",en:"Trapezius",zh:"斜方肌",color:"#C0785A",paths:["M 40 18 Q 44 16 50 15 Q 56 16 60 18 L 58 24 Q 54 22 50 21 Q 46 22 42 24 Z"],desc_en:"Upper back connecting neck and shoulders.",desc_zh:"上背部，连接颈肩。",exercises:["Shrugs","Face Pulls"],tips_en:"Trainable during lower body personal training.",tips_zh:"下肢康复期可训练。"},
+    { id:"lats",en:"Latissimus Dorsi",zh:"背阔肌",color:"#B8654E",paths:["M 36 28 Q 38 32 40 38 Q 42 42 44 44 L 50 42 L 56 44 Q 58 42 60 38 Q 62 32 64 28 L 58 24 Q 54 22 50 21 Q 46 22 42 24 Z"],desc_en:"Large back muscles for posture.",desc_zh:"大背肌，维持姿势。",exercises:["Seated Rows","Lat Pulldown"],tips_en:"Seated rows maintain upper body during personal training.",tips_zh:"坐姿划船保持上肢力量。"},
     { id:"glutes",en:"Glutes",zh:"臀肌",color:"#E06848",paths:["M 38 48 Q 36 52 38 56 Q 42 58 50 57 Q 58 58 62 56 Q 64 52 62 48 Q 58 46 50 46 Q 42 46 38 48 Z"],desc_en:"ESSENTIAL for hip stability and knee alignment. Your #1 ally per AAOS.",desc_zh:"对髋关节稳定和膝关节排列至关重要。按AAOS，第一盟友。",exercises:["Glute Bridges","Clamshells","Wall Squats"],tips_en:"Bridges and clamshells are safe per AAOS guidelines.",tips_zh:"按AAOS指南，臀桥和蚌式开合安全。"},
     { id:"hamstrings",en:"Hamstrings",zh:"腘绳肌",color:"#CC5640",paths:["M 38 57 Q 37 63 36 70 Q 36 76 38 78 L 43 78 Q 46 74 47 70 Q 48 63 47 57 Z","M 62 57 Q 63 63 64 70 Q 64 76 62 78 L 57 78 Q 54 74 53 70 Q 52 63 53 57 Z"],desc_en:"Work with quads to stabilize knee. Critical for balanced recovery.",desc_zh:"与股四头肌协同稳定膝关节。平衡恢复关键。",exercises:["Hamstring Curls","Glute Bridges","Nordic Curls (advanced)"],tips_en:"Strengthen gradually per HSS. Avoid deep flexion early.",tips_zh:"按HSS逐步增强。早期避免深度屈曲。"},
     { id:"calves",en:"Calves",zh:"小腿肌肉",color:"#D4844C",paths:["M 38 80 Q 37 84 36 90 Q 36 96 38 98 L 43 98 Q 44 94 44 90 Q 44 84 43 80 Z","M 62 80 Q 63 84 64 90 Q 64 96 62 98 L 57 98 Q 56 94 56 90 Q 56 84 57 80 Z"],desc_en:"CRITICAL for ankle stability and effusion management.",desc_zh:"对脚踝稳定和积液管理至关重要。",exercises:["Double Calf Raises","Single-Leg Calf Raises"],tips_en:"Start double-leg per NIH. Single-leg only when swelling controlled.",tips_zh:"按NIH双腿开始。肿胀控制后单腿。"},
@@ -34,7 +34,7 @@ const MUSCLES_DATA = {
 };
 
 const EXERCISES = [
-  // ─── Lower Body: Knee Rehab ───
+  // ─── Lower Body: Knee Personal Training ───
   { id:"quad-set",name:"Quad Sets",zh:"股四头肌收缩",target:"Quadriceps",phase:1,intensity:1,safeFor:["knee","ankle"],sets:3,reps:12,hold:6,str:"beginner",gym:false,ytId:"hfHhVDW0aVE",ytStart:45,steps:["Sit/lie with affected leg straight","Place rolled towel under knee","Press knee into towel, tighten thigh","Hold 6s, relax","Repeat"],tip:"Imagine pushing kneecap to ceiling.",warn:"Stop if sharp knee pain.",src:"Kaiser / HSS" },
   { id:"slr",name:"Straight Leg Raises",zh:"直腿抬高",target:"Quads",phase:1,intensity:1,safeFor:["knee","ankle"],sets:3,reps:10,hold:3,str:"beginner",gym:false,ytId:"ucUGxOHdDvQ",ytStart:60,steps:["Lie down, unaffected knee bent","Affected leg straight","Tighten quad, lift 12\"","Hold 3s","Lower slowly"],tip:"Lock knee before lifting.",warn:"Smooth motion only.",src:"AAOS / Mass General" },
   { id:"heel-slide",name:"Heel Slides",zh:"足跟滑动",target:"Knee ROM",phase:1,intensity:1,safeFor:["knee"],sets:3,reps:10,hold:2,str:"beginner",gym:false,ytId:"Rr0g_b8Neq4",ytStart:90,steps:["Lie with legs straight","Slide heel toward buttock","As far as comfortable","Hold 2s","Slide back"],tip:"Towel under heel.",warn:"Never push into pain.",src:"HSS Protocol" },
@@ -48,7 +48,7 @@ const EXERCISES = [
   { id:"partial-lunge",name:"Partial Lunges",zh:"半弓步",target:"Functional",phase:3,intensity:3,safeFor:["knee"],sets:3,reps:8,hold:0,str:"intermediate",gym:false,ytId:"lCojvuCzqyY",ytStart:240,steps:["Hip-width","Short step forward","Partial bend ~45°","Push front heel","Knee over ankle"],tip:"Control > depth.",warn:"No twisting.",src:"Kaiser / AAOS" },
   { id:"ham-curl",name:"Hamstring Curls",zh:"站姿腿弯举",target:"Hamstrings",phase:3,intensity:3,safeFor:["knee","ankle"],sets:3,reps:12,hold:2,str:"beginner",gym:false,ytId:"ucUGxOHdDvQ",ytStart:180,steps:["Hold counter","Heel to buttock","Comfortable range","Hold 2s","Lower"],tip:"Add ankle weight when easy.",warn:"Pain-free range.",src:"AAOS / Mass General" },
   { id:"ham-curl-machine",name:"Hamstring Curl Machine",zh:"腿弯举器械",target:"Hamstrings",phase:3,intensity:3,safeFor:["knee"],sets:3,reps:10,hold:2,str:"beginner",gym:true,ytId:"ucUGxOHdDvQ",ytStart:0,steps:["Lie face down on machine","Adjust pad to ankles","Curl heels toward buttock","Hold 2s at top","Lower slowly, light weight"],tip:"Machine provides stability.",warn:"Stop if any knee pain.",src:"ACSM" },
-  // ─── Lower Body: Ankle Rehab ───
+  // ─── Lower Body: Ankle Personal Training ───
   { id:"ankle-pump",name:"Ankle Pumps",zh:"踝泵运动",target:"Ankle mobility",phase:1,intensity:1,safeFor:["ankle"],sets:3,reps:20,hold:0,str:"beginner",gym:false,ytId:"AGnPPbSEs7U",ytStart:30,steps:["Elevate leg on pillow","Point toes down","Pull toes up","Full comfortable range","Add circles when easy"],tip:"Pumps fluid out of joint.",warn:"Pain-free range.",src:"NIH PMC" },
   { id:"calf-raise",name:"Double Calf Raises",zh:"双腿提踵",target:"Calves",phase:2,intensity:2,safeFor:["ankle","knee"],sets:3,reps:15,hold:2,str:"beginner",gym:false,ytId:"o590MavfNF8",ytStart:180,steps:["Stand, hands on counter","Rise onto toes","Hold 2s","Lower with control","No bouncing"],tip:"Shift weight to affected side gradually.",warn:"Stop if swelling increases.",src:"NIH PMC" },
   { id:"band-ankle",name:"Band Ankle 4-Way",zh:"弹力带踝关节四向",target:"Ankle strength",phase:2,intensity:2,safeFor:["ankle"],sets:2,reps:10,hold:2,str:"beginner",gym:false,ytId:"AGnPPbSEs7U",ytStart:120,steps:["Band around foot","Push DOWN","Pull UP","Turn IN","Turn OUT"],tip:"All 4 directions matter.",warn:"Light band first.",src:"NIH PMC" },
@@ -468,7 +468,7 @@ function MuscleModal({muscle:m,onClose}){
         {allMatched.length>0&&<div style={{fontSize:11,color:C.sub,marginTop:8,textAlign:"center"}}>Tap any exercise for video & instructions 点击查看视频和说明</div>}
       </div>
 
-      <div style={{background:"#F0F4FF",borderRadius:12,padding:16}}><div style={{fontSize:12,fontWeight:700,color:C.accent2,marginBottom:8}}>REHAB TIPS 康复建议</div><p style={{fontSize:13,color:C.text,lineHeight:1.5,margin:"0 0 4px"}}>{m.tips_en}</p><p style={{fontSize:13,color:C.sub,lineHeight:1.5,margin:0}}>{m.tips_zh}</p></div>
+      <div style={{background:"#F0F4FF",borderRadius:12,padding:16}}><div style={{fontSize:12,fontWeight:700,color:C.accent2,marginBottom:8}}>PERSONAL TRAINING TIPS 康复建议</div><p style={{fontSize:13,color:C.text,lineHeight:1.5,margin:"0 0 4px"}}>{m.tips_en}</p><p style={{fontSize:13,color:C.sub,lineHeight:1.5,margin:0}}>{m.tips_zh}</p></div>
     </div>
   </div>);
 }
@@ -517,7 +517,7 @@ function useDrag(initX, initY) {
 
 function AIChatbot(){
   const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState([{role:"ai",text:"Hi! I'm your rehab assistant 🩺\nAsk about knee/ankle recovery in English or 中文!"}]);
+  const [msgs, setMsgs] = useState([{role:"ai",text:"Hi! I'm your personal training assistant 🩺\nAsk about knee/ankle recovery in English or 中文!"}]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const chatRef = useRef(null);
@@ -583,7 +583,7 @@ function AIChatbot(){
       <div onMouseDown={win.onStart} onTouchStart={win.onStart}
         style={{ padding: "14px 18px", borderBottom: `1px solid ${C.border}`, display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "grab", userSelect: "none", borderRadius: "20px 20px 0 0" }}>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Rehab AI 康复助手</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: C.text }}>Personal Training AI 康复助手</div>
           <div style={{ fontSize: 11, color: C.sub }}>Drag header to move · English / 中文</div>
         </div>
         <button onClick={() => setOpen(false)} style={{ background: C.card, border: "none", color: C.sub, width: 28, height: 28, borderRadius: 14, cursor: "pointer", fontSize: 14 }}>✕</button>
@@ -750,7 +750,7 @@ export default function App(){
 
         {/* ─── Progression Card ─── */}
         <div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:14,border:`1px solid ${C.cardBorder}`,animation:"fadeUp 0.4s ease 0.02s both"}}>
-          <div style={{fontSize:13,fontWeight:700,color:C.sub,letterSpacing:0.5,marginBottom:14}}>YOUR REHAB JOURNEY</div>
+          <div style={{fontSize:13,fontWeight:700,color:C.sub,letterSpacing:0.5,marginBottom:14}}>YOUR PERSONAL TRAINING JOURNEY</div>
           {/* Phase indicators */}
           <div style={{display:"flex",alignItems:"center",gap:0,marginBottom:16}}>
             {[1,2,3].map(p => {
@@ -1023,8 +1023,8 @@ export default function App(){
           {libOpen&&<div style={{marginTop:14}}>
           {(()=>{
             const groups = [
-              {label:"🦵 Knee Rehab 膝关节",filter:e=>e.safeFor.includes("knee")&&!e.safeFor.includes("upper")},
-              {label:"🦶 Ankle Rehab 脚踝",filter:e=>e.safeFor.includes("ankle")&&!e.safeFor.includes("knee")&&!e.safeFor.includes("upper")},
+              {label:"🦵 Knee Personal Training 膝关节",filter:e=>e.safeFor.includes("knee")&&!e.safeFor.includes("upper")},
+              {label:"🦶 Ankle Personal Training 脚踝",filter:e=>e.safeFor.includes("ankle")&&!e.safeFor.includes("knee")&&!e.safeFor.includes("upper")},
               {label:"🦵🦶 Knee + Ankle 膝踝",filter:e=>e.safeFor.includes("knee")&&e.safeFor.includes("ankle")&&!e.safeFor.includes("upper")},
               {label:"💪 Upper Body 上肢",filter:e=>e.safeFor.includes("upper")&&!e.safeFor.includes("knee")},
               {label:"🏋️ Full Body 全身",filter:e=>e.safeFor.includes("upper")&&(e.safeFor.includes("knee")||e.safeFor.includes("ankle"))},

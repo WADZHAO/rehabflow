@@ -1,10 +1,10 @@
-# RehabFlow
+# PersonalTrainingFlow
 
-A bilingual (English / 中文) rehab companion for knee (meniscus) and ankle recovery, built around evidence-based protocols from Mayo Clinic, AAOS, HSS, Mass General, Kaiser Permanente, NIH/PMC, BMJ, and ACSM.
+A bilingual (English / 中文) personal training companion for knee (meniscus) and ankle recovery, built around evidence-based protocols from Mayo Clinic, AAOS, HSS, Mass General, Kaiser Permanente, NIH/PMC, BMJ, and ACSM.
 
 ## Intent
 
-RehabFlow turns clinical rehab guidance into a daily, trackable practice. It is designed for someone recovering from a knee or ankle injury who wants a single place to:
+PersonalTrainingFlow turns clinical personal training guidance into a daily, trackable practice. It is designed for someone recovering from a knee or ankle injury who wants a single place to:
 
 - **Follow a phased plan.** Exercises are tagged by phase (1 → 3), intensity, target muscle group, and whether they require gym equipment, so the session can adapt to where the user is in recovery.
 - **Understand the "why."** Each exercise carries cited guidance (e.g. AAOS, HSS, Kaiser PT program), bilingual step-by-step instructions, form tips, warning signs, and an embedded YouTube reference.
@@ -39,7 +39,7 @@ npm run lint     # run ESLint
 ## Project Structure
 
 ```
-rehabflow/
+personaltrainingflow/
 ├── src/
 │   ├── App.jsx        # Main app: exercise library, muscle map, tracker, logic
 │   ├── main.jsx       # React entry point

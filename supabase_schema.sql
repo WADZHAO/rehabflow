@@ -1,4 +1,4 @@
--- RehabFlow Supabase schema
+-- PersonalTrainingFlow Supabase schema
 -- Paste this into the Supabase SQL editor (Project → SQL Editor → New query → Run).
 --
 -- Prerequisite: in the Supabase dashboard, enable anonymous sign-ins:
