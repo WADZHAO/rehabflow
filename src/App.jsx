@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ensureSession, loadAll, saveProfile as supaSaveProfile, saveDailyLog, saveSettings as supaSaveSettings } from "./supabase";
+import { ensureSession, loadAll, saveProfile as supaSaveProfile, saveDailyLog, saveSettings as supaSaveSettings, upgradeToEmail, signInWithEmail, signOut } from "./supabase";
 
 const SOURCES = [
   { org:"Mayo Clinic", desc:"Torn Meniscus — Diagnosis & Treatment", url:"https://www.mayoclinic.org/diseases-conditions/torn-meniscus/diagnosis-treatment/drc-20354823" },
@@ -609,6 +609,59 @@ function AIChatbot(){
   );
 }
 
+// ═══ ACCOUNT CARD ═══
+function AccountCard({user}){
+  const [mode,setMode]=useState("save"); // "save" = upgrade anon, "signin" = existing account
+  const [email,setEmail]=useState("");
+  const [status,setStatus]=useState(null); // null | "sending" | "sent" | error string
+  const isSignedIn = user && user.email && user.is_anonymous===false;
+
+  if(isSignedIn){
+    return(<div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:12,border:`1px solid ${C.cardBorder}`,animation:"fadeUp 0.35s ease 0.27s both"}}>
+      <div style={{fontSize:13,fontWeight:700,color:C.sub,letterSpacing:0.5,marginBottom:10}}>ACCOUNT 账户</div>
+      <div style={{fontSize:14,color:C.text,marginBottom:6}}>Signed in as <b>{user.email}</b></div>
+      <div style={{fontSize:12,color:C.sub,marginBottom:14}}>Your training data is synced to this email. Open the app on any URL or device and sign in with this email to access it.</div>
+      <button onClick={async()=>{await signOut();window.location.reload();}}
+        style={{background:"transparent",border:`1.5px solid ${C.border}`,color:C.sub,padding:"10px 18px",borderRadius:10,fontSize:14,cursor:"pointer",fontFamily:SF}}>Sign out</button>
+    </div>);
+  }
+
+  const submit=async()=>{
+    if(!email||!email.includes("@"))return;
+    setStatus("sending");
+    const fn = mode==="save" ? upgradeToEmail : signInWithEmail;
+    const res = await fn(email);
+    if(res.ok)setStatus("sent");
+    else setStatus(res.error||"Failed to send link");
+  };
+
+  return(<div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:12,border:`1px solid ${C.cardBorder}`,animation:"fadeUp 0.35s ease 0.27s both"}}>
+    <div style={{fontSize:13,fontWeight:700,color:C.sub,letterSpacing:0.5,marginBottom:10}}>ACCOUNT 账户</div>
+    <div style={{fontSize:13,color:C.sub,marginBottom:14,lineHeight:1.5}}>
+      Your data is currently anonymous. Add an email to keep it safe and access it from any device or URL.
+      <br/>添加邮箱以保护并跨设备访问您的训练数据。
+    </div>
+    <div style={{display:"flex",gap:6,marginBottom:12}}>
+      {[{id:"save",label:"Save current data"},{id:"signin",label:"I already have an account"}].map(m=>(
+        <button key={m.id} onClick={()=>{setMode(m.id);setStatus(null);}}
+          style={{flex:1,padding:"10px 6px",borderRadius:10,cursor:"pointer",background:mode===m.id?"#FFF0F3":"#fff",border:mode===m.id?`2px solid ${C.accent}`:`1.5px solid ${C.border}`,fontSize:12,fontWeight:600,color:mode===m.id?C.accent:C.sub,fontFamily:SF}}>{m.label}</button>
+      ))}
+    </div>
+    <input type="email" value={email} onChange={e=>{setEmail(e.target.value);setStatus(null);}} placeholder="you@example.com"
+      style={{width:"100%",padding:"12px 14px",borderRadius:12,border:`1.5px solid ${C.border}`,fontSize:15,fontFamily:SF,color:C.text,outline:"none",background:"#fff",marginBottom:10}}/>
+    <button onClick={submit} disabled={status==="sending"||!email}
+      style={{background:C.accent,border:"none",color:"#fff",width:"100%",padding:13,borderRadius:12,fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:SF,opacity:(status==="sending"||!email)?0.5:1}}>
+      {status==="sending"?"Sending…":"Send magic link"}
+    </button>
+    {status==="sent"&&<div style={{background:"#E8FAF0",borderRadius:10,padding:12,marginTop:12,fontSize:13,color:C.green,lineHeight:1.5}}>
+      ✓ Check your inbox at <b>{email}</b> (and spam folder). Click the link to {mode==="save"?"confirm — your data stays where it is.":"sign in."}
+    </div>}
+    {status&&status!=="sending"&&status!=="sent"&&<div style={{background:"#FFF0F0",borderRadius:10,padding:12,marginTop:12,fontSize:13,color:"#FF3B30"}}>
+      {status}
+    </div>}
+  </div>);
+}
+
 // ═══ APP ═══
 export default function App(){
   const[scr,setScr]=useState("profile");const[ci,setCi]=useState({pain:0,swelling:0,mood:3,areas:["knee","ankle","upper"]});
@@ -622,6 +675,7 @@ export default function App(){
   const[exReturn,setExReturn]=useState("plan");
   const exScrollYRef=useRef(0);
   const[userId,setUserId]=useState(null);
+  const[authUser,setAuthUser]=useState(null);
 
   // Bootstrap: anon auth + hydrate from Supabase
   useEffect(()=>{
@@ -632,6 +686,7 @@ export default function App(){
       const data=await loadAll(user.id);
       if(cancelled||!data)return;
       setUserId(user.id);
+      setAuthUser(user);
       if(data.profile){
         const p={age:data.profile.age||"",height:data.profile.height||"",weight:data.profile.weight||"",level:data.profile.level||"beginner",gender:data.profile.gender||"female",hasGym:!!data.profile.has_gym,saved:true};
         setProfile(p);
@@ -1155,6 +1210,8 @@ export default function App(){
             </div>
           );
         })()}
+
+        <AccountCard user={authUser}/>
 
         <button onClick={()=>{const np={...profile,saved:true};setProfile(np);if(userId)supaSaveProfile(userId,np);nav("checkin");}}
           disabled={!profile.age||!profile.height||!profile.weight}

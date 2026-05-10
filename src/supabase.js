@@ -18,6 +18,36 @@ export async function ensureSession() {
   return data.user;
 }
 
+// Attach an email to the current (anonymous) user.
+// Preserves user_id, so existing profile/logs/settings rows stay accessible.
+// Sends a confirmation email; the user must click the link to finish the upgrade.
+export async function upgradeToEmail(email) {
+  if (!supabase) return { error: "Supabase not configured" };
+  const { error } = await supabase.auth.updateUser(
+    { email },
+    { emailRedirectTo: window.location.origin }
+  );
+  if (error) return { error: error.message };
+  return { ok: true };
+}
+
+// Send a magic link to sign into an existing email-bound account.
+// Use this from a new URL/device to recover an account created via upgradeToEmail.
+export async function signInWithEmail(email) {
+  if (!supabase) return { error: "Supabase not configured" };
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.origin, shouldCreateUser: false },
+  });
+  if (error) return { error: error.message };
+  return { ok: true };
+}
+
+export async function signOut() {
+  if (!supabase) return;
+  await supabase.auth.signOut();
+}
+
 export async function loadAll(userId) {
   if (!supabase || !userId) return null;
   const [profileRes, logsRes, settingsRes] = await Promise.all([
